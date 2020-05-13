@@ -12,5 +12,5 @@ class Block:
         self.transaction = transaction
         self.hashData = hashData
         
-    def getGenesisBlock():
+    def getGenesisBlock(self):
         print("go to this")
