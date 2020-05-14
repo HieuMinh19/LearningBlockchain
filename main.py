@@ -1,5 +1,6 @@
 from Block import Block
 import time
+from Blockchain import Blockchain
 from hashlib import sha256
 class main:
     blockchain = []
@@ -26,9 +27,9 @@ class main:
         data = (str(index) + previousHash + str(timestamp) + data).encode('utf-8')
         return sha256(data).hexdigest()
 
-    def calculateHashForBlock(self, block):
-        data = (str(block.index) + block.previousHash + str(block.timestamp) + block.transaction).encode('utf-8')
-        return sha256(data).hexdigest()
+    # def calculateHashForBlock(self, block):
+    #     data = (str(block.index) + block.previousHash + str(block.timestamp) + block.transaction).encode('utf-8')
+    #     return sha256(data).hexdigest()
 
     def isValidNewBlock(self, newBlock, previousBlock):
         if previousBlock.index + 1 != newBlock.index :

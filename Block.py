@@ -1,3 +1,4 @@
+from hashlib import sha256
 class Block:
     def __init__(self, index, previousHash, timestamp, transaction, hashData):
         """
@@ -12,5 +13,11 @@ class Block:
         self.transaction = transaction
         self.hashData = hashData
         
-    def getGenesisBlock(self):
-        print("go to this")
+    # def getGenesisBlock(self):
+    #     BlockClass = Block(0, "0", 1465154705, "my genesis block!!", "816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7")
+    #     return BlockClass
+    
+    def calculateHashForBlock(self):
+        data = (str(self.index) + self.previousHash + str(self.timestamp) + self.transaction).encode('utf-8')
+        self.hashData = sha256(data).hexdigest()
+        return self.hashData
