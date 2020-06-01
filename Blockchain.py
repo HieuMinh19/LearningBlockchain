@@ -43,6 +43,17 @@ class Blockchain:
             nonce += 1
             computed_hash = self.calculateHash(index, previousHash, timestamp, data, nonce)
 
+        print('MINER NONCE: ')
+        print(nonce)
         return Block(index, previousHash, timestamp, data, computed_hash, nonce)
+
+    def display_chain(self):
+        for block in self.chain:
+            print("index: " + str(block.index))
+            print("Transaction " + block.transaction)
+            
+
+
 bc = Blockchain()
-#bc.proof_of_work(bc.getLatestBlock())
+# bc.display_chain()
+

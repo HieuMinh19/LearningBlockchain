@@ -1,11 +1,13 @@
-from hashlib import sha256
 class Block:
     def __init__(self, index, previousHash, timestamp, transaction, hashData, nonce):
         """
         Constructor cho một `Block` class.
         :param index: Chỉ số ID duy nhất của một block.
         :param previousHash: Chỉ số khối trước đó.
-        :param timestamp: Thời gian tạo block.
+        :param timestamp: Thời gian tạo block.(unix timestamp)
+        :param transaction: list v_in và v_out dạng json
+        :param hashdata: hash của block
+        :param nonce: hằng số nonce của riêng block
         """
         self.index = index
         self.previousHash = previousHash
