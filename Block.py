@@ -1,4 +1,5 @@
-class Block:
+from hashlib import sha256
+class Block:            
     def __init__(self, index, previousHash, timestamp, transaction, hashData, nonce):
         """
         Constructor cho một `Block` class.
