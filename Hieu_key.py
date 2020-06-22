@@ -38,9 +38,9 @@ sig2 = priv.sign_msg(message)
 
 
 def get_by_signature(signature, msg, amount):
+    arrTransOutput = []
     publicKey = signature.recover_public_key_from_msg(msg)
     strPublicKey = str(publicKey)[2:]
-    print('PUBLIC KEY', strPublicKey)
     db_ = MySQLdb.connect(
         host="localhost", 
         port=3306, 
@@ -52,9 +52,6 @@ def get_by_signature(signature, msg, amount):
     sql += '"'
     sql += strPublicKey
     sql += '"'
-    sql +=  " AND amount > "
-    sql += str(amount)
-    sql += " ORDER BY amount desc LIMIT 1"
     db_cursor.execute(sql)
     result = db_cursor.fetchall()
     if(db_cursor.rowcount):    
@@ -64,10 +61,10 @@ def get_by_signature(signature, msg, amount):
             txIndex = row[2]
             publicKey = row[3]
             blockHash = row[4]
+            transOutput = TransactionOutput(totalAmount, txIndex, publicKey, blockHash)
+            arrTransOutput.append(transOutput)
 
-        transOutput = TransactionOutput(totalAmount, txIndex, publicKey, blockHash)
-        return transOutput
-    else: return None
+    return arrTransOutput
 
 
 '''
@@ -77,7 +74,7 @@ create array transaction output and return uspend amount
 @param: String -> receiveUser: public Key receive user
 @param: String -> selfHash: public Key your self
 @param: String ->blockHash
-@return: Object -> TransactionOutput
+@return: Array Object -> TransactionOutput
 '''
 def calculate_trans_output(transOutput, cost, receiveUser, selfHash, blockHash):
     result = []
@@ -90,11 +87,33 @@ def calculate_trans_output(transOutput, cost, receiveUser, selfHash, blockHash):
     return result
 
 
+'''
+check trans_out has been used?
+@param: Integer txIndex,
+@param:  String blockHash
+@return boolean
+'''
+def is_using_trans_output(txIndex, blockHash):
+    db_ = MySQLdb.connect(
+        host="localhost", 
+        port=3306, 
+        user="root", 
+        passwd="", 
+        db="blockchain")
+    db_cursor = db_.cursor()
+    sql = 'SELECT * FROM trans_output WHERE tx_index = ' + str(txIndex)
+    sql += ' AND tx_hash = ' + str(blockHash)
+    sql += "LIMIT 1"
+    db_cursor.execute(sql)
+
+    return (db_cursor.rowcount) ? True : False
+
+
 trans = get_by_signature(sig2, message, 10)
 hashData = '816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7'
 pubKey = '45349a48fc30078dc98e226a0bc50b6f814eec2c3cb479ac40c758dd5d6fac68c0f543d53e93dabeed8f7b517424f9514183eb13466f87a24ac872080c1f6f01'
-result2 = calculate_trans_output(trans, 10, pubKey, pubKey, hashData)
-print('RESULT 2', result2[0].amount)
+# result2 = calculate_trans_output(trans, 10, pubKey, pubKey, hashData)
+print('RESULT 2', trans[1].amount)
 
 
 
